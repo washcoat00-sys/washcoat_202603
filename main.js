@@ -64,7 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const ids = [
             'weight_clean', 'weight_soot_loaded', 'weight_after_regen',
             'cmm', 'temp_c', 'amb_kpa', 'width_mm', 'height_mm', 'depth_mm',
-            'cpsi', 'wall_mil', 'porosity_pct', 'pore_size_um', 'pipe_dia_mm', 'cone_angle_deg'
+            'cpsi', 'wall_mil', 'porosity_pct', 'pore_size_um', 
+            'pipe_dia_mm', 'cone_len_mm', 'cone_angle_deg'
         ];
         
         const data = {};
@@ -77,16 +78,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const val = parseFloat(el.value);
             if (isNaN(val)) {
-                alert(`입력값을 확인해주세요: [${id}] 항목에 유효한 숫자가 없습니다.`);
+                alert(`입력값을 확인해주세요: [${id}] 항목에 숫자가 없습니다.`);
                 return null;
             }
             data[id] = val;
         }
         
-        // k2는 문자열로 가져와서 나중에 변환 (과학적 표기법 대응)
         const k2El = document.getElementById('k2');
         if (!k2El || isNaN(parseFloat(k2El.value))) {
-            alert("입력값을 확인해주세요: [Soot 투과율(k2)] 항목이 비어있거나 숫자가 아닙니다.");
+            alert("입력값을 확인해주세요: [Soot 투과율(k2)] 항목에 숫자가 필요합니다.");
             return null;
         }
         data['k2'] = k2El.value;
