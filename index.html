@@ -3,16 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로또 번호 생성기</title>
+    <title>DPF 차압 & 배압 분석기 v2.3</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="main.js" defer></script>
 </head>
 <body>
-    <div class="container">
-        <button id="theme-toggle" class="theme-btn">로딩 중...</button>
-        <h1>로또 번호 생성기</h1>
-        <button id="generator-btn">번호 생성하기</button>
-        <div id="lotto-numbers" class="lotto-numbers"></div>
+    <div class="container dpf-container">
+        <button id="theme-toggle" class="theme-btn">테마 변경</button>
+        <h1>DPF 차압 & 배압 분석기 v2.3</h1>
+        
+        <div class="system-diagram-container">
+            <!-- 이미지가 있으면 표시, 없으면 텍스트 표시 -->
+            <img src="system_diagram.png" id="system-img" alt="시스템 구성도" onerror="this.style.display='none'; document.getElementById('img-fallback').style.display='block';">
+            <div id="img-fallback" style="display:none; padding: 20px; border: 1px dashed #ccc; margin-bottom: 15px;">
+                [시스템 구성도 이미지 로드 대기 중]<br>
+                <small>(system_diagram.png 파일을 업로드해주세요)</small>
+            </div>
+        </div>
+
+        <form id="dpf-form" class="dpf-grid-form">
+            <!-- 무게 데이터 -->
+            <section class="form-section">
+                <h3>무게 데이터 (kg)</h3>
+                <div class="form-group"><label for="weight_clean">신품 필터 무게</label><input type="number" id="weight_clean" value="11.75" step="0.01"></div>
+                <div class="form-group"><label for="weight_soot_loaded">Soot Loaded 무게</label><input type="number" id="weight_soot_loaded" value="11.90" step="0.01"></div>
+                <div class="form-group"><label for="weight_after_regen">재생 후 무게</label><input type="number" id="weight_after_regen" value="11.80" step="0.01"></div>
+            </section>
+
+            <!-- 운전 조건 -->
+            <section class="form-section">
+                <h3>운전 조건</h3>
+                <div class="form-group"><label for="cmm">석션 유량 (CMM)</label><input type="number" id="cmm" value="120"></div>
+                <div class="form-group"><label for="temp_c">흡기 온도 (°C)</label><input type="number" id="temp_c" value="25"></div>
+                <div class="form-group"><label for="amb_kpa">대기압 (kPa)</label><input type="number" id="amb_kpa" value="101.325" step="0.001"></div>
+            </section>
+
+            <!-- 필터 제원 -->
+            <section class="form-section">
+                <h3>필터 제원 (mm)</h3>
+                <div class="form-group">
+                    <label>가로 × 세로 × 높이</label>
+                    <div class="inline-inputs">
+                        <input type="number" id="width_mm" value="300" placeholder="W">
+                        <input type="number" id="height_mm" value="300" placeholder="H">
+                        <input type="number" id="depth_mm" value="300" placeholder="L">
+                    </div>
+                </div>
+                <div class="form-group"><label for="cpsi">밀도 (CPSI)</label><input type="number" id="cpsi" value="200"></div>
+                <div class="form-group"><label for="wall_mil">벽 두께 (mil)</label><input type="number" id="wall_mil" value="8"></div>
+                <div class="form-group"><label for="porosity_pct">기공률 (%)</label><input type="number" id="porosity_pct" value="40"></div>
+                <div class="form-group"><label for="pore_size_um">기공 크기 (um)</label><input type="number" id="pore_size_um" value="15"></div>
+            </section>
+
+            <!-- 물리 상수 및 배관 -->
+            <section class="form-section">
+                <h3>물리 상수 및 배관</h3>
+                <div class="form-group"><label for="k2">Soot 투과율 (k2)</label><input type="text" id="k2" value="2.0e-14"></div>
+                <div class="form-group"><label for="pipe_dia_mm">출구 파이프 직경 (mm)</label><input type="number" id="pipe_dia_mm" value="150"></div>
+                <div class="form-group">
+                    <label>콘 길이 (mm) / 각도 (°)</label>
+                    <div class="inline-inputs">
+                        <input type="number" id="cone_len_mm" value="600" placeholder="Len">
+                        <input type="number" id="cone_angle_deg" value="96" placeholder="Deg">
+                    </div>
+                </div>
+            </section>
+        </form>
+
+        <div class="guide-box">
+            <p><strong>※ 측정 가이드:</strong></p>
+            <ul>
+                <li>Delta P는 최대 101.325kPa을 초과불가.</li>
+                <li>Calibration 방법 k2 = Tuning Knob.</li>
+                <li>예측 차압 > 실측 차압: Soot가 적음 => k2값 증가</li>
+                <li>예측 차압 < 실측 차압: Soot가 많음 => k2값 감소</li>
+            </ul>
+        </div>
+
+        <div class="btn-group">
+            <button id="analyze-btn" class="primary-btn">상태별 분석하기</button>
+            <button id="graph-btn" class="secondary-btn">분석 그래프 보기</button>
+        </div>
+
+        <!-- 결과 표시 영역 -->
+        <div id="results-display" class="results-container" style="display:none;">
+            <h3>분석 결과 (P1 = <span id="res-p1"></span> kPa 기준)</h3>
+            <div id="results-content"></div>
+        </div>
+
+        <!-- 그래프 영역 -->
+        <div id="graph-container" class="graph-box" style="display:none;">
+            <h3>DPF 차압 분석 예측 그래프</h3>
+            <canvas id="dpfChart"></canvas>
+        </div>
     </div>
 </body>
 </html>

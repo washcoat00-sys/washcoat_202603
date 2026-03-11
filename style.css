@@ -2,57 +2,53 @@
     --bg-color: #f8f9fa;
     --container-bg: #ffffff;
     --text-color: #212529;
-    --btn-bg: #007bff;
-    --btn-hover: #0056b3;
-    --lotto-num-bg: #ffc107;
-    --lotto-num-text: #212529;
+    --primary-color: #007bff;
+    --secondary-color: #28a745;
     --border-color: #dee2e6;
+    --guide-bg: #e7f3ff;
+    --guide-text: #004085;
+    --section-bg: #f1f3f5;
 }
 
 .dark-mode {
     --bg-color: #121212;
     --container-bg: #1e1e1e;
     --text-color: #e9ecef;
-    --btn-bg: #375a7f;
-    --btn-hover: #2b4764;
-    --lotto-num-bg: #fd7e14;
-    --lotto-num-text: #ffffff;
+    --primary-color: #375a7f;
+    --secondary-color: #2b8a3e;
     --border-color: #444444;
+    --guide-bg: #1a2b3c;
+    --guide-text: #d1ecf1;
+    --section-bg: #2d2d2d;
 }
 
 body {
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
     background-color: var(--bg-color);
     color: var(--text-color);
     margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.container {
-    position: relative;
-    text-align: center;
-    padding: 3rem 2rem;
+.dpf-container {
     background-color: var(--container-bg);
+    padding: 2rem;
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 400px;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 800px;
+    position: relative;
     border: 1px solid var(--border-color);
 }
 
-.dark-mode .container {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
 h1 {
-    margin-bottom: 2rem;
+    text-align: center;
     font-size: 1.8rem;
-    color: var(--text-color);
+    margin-bottom: 2rem;
+    color: var(--primary-color);
 }
 
 .theme-btn {
@@ -66,58 +62,152 @@ h1 {
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.85rem;
-    transition: all 0.2s ease;
 }
 
-.theme-btn:hover {
-    background-color: rgba(128, 128, 128, 0.1);
+.system-diagram-container {
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
-#generator-btn {
-    width: 100%;
-    padding: 1rem;
+#system-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.dpf-grid-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.form-section {
+    background-color: var(--section-bg);
+    padding: 1.2rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.form-section h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
     font-size: 1.1rem;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
     font-weight: 600;
-    color: white;
-    background-color: var(--btn-bg);
+    margin-bottom: 0.4rem;
+    opacity: 0.8;
+}
+
+input {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background-color: var(--container-bg);
+    color: var(--text-color);
+    font-size: 0.95rem;
+}
+
+.inline-inputs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.inline-inputs input {
+    flex: 1;
+}
+
+.guide-box {
+    background-color: var(--guide-bg);
+    color: var(--guide-text);
+    padding: 1.2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    border-left: 5px solid var(--primary-color);
+}
+
+.guide-box ul {
+    margin: 0.5rem 0 0 1.2rem;
+    padding: 0;
+}
+
+.btn-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.btn-group button {
+    flex: 1;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
     border: none;
     border-radius: 12px;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    color: white;
+    transition: transform 0.1s ease, opacity 0.2s ease;
 }
 
-#generator-btn:hover {
-    background-color: var(--btn-hover);
+.primary-btn { background-color: var(--primary-color); }
+.secondary-btn { background-color: var(--secondary-color); }
+
+.btn-group button:active { transform: scale(0.98); }
+.btn-group button:hover { opacity: 0.9; }
+
+.results-container {
+    background-color: var(--section-bg);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
 }
 
-#generator-btn:active {
-    transform: scale(0.98);
+.result-card {
+    background-color: var(--container-bg);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.8rem;
+    border-left: 4px solid var(--primary-color);
 }
 
-.lotto-numbers {
-    display: flex;
-    justify-content: center;
-    margin-top: 2.5rem;
-    flex-wrap: wrap;
-    gap: 12px;
+.result-card strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
 }
 
-.lotto-number {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background-color: var(--lotto-num-bg);
-    color: var(--lotto-num-text);
-    font-size: 1.2rem;
-    font-weight: bold;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+.result-card p {
+    margin: 0.2rem 0;
+    font-family: 'Consolas', monospace;
+    font-size: 0.95rem;
 }
 
-@keyframes popIn {
-    0% { transform: scale(0); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+.graph-box {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.dark-mode .graph-box {
+    background-color: #ffffff; /* 차트는 흰 배경이 보기 좋음 */
+}
+
+.graph-box h3 {
+    margin-top: 0;
+    color: #333;
+    text-align: center;
 }
