@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
 
-    // 핵심 물리 모델 (Python _get_dp 로직 이식)
+    // 핵심 물리 모델
     function getDP(d, soot_gL, ash_gL) {
         const tortuosity = 1.8;
         const k1_internal = 0.4;
@@ -61,29 +61,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getInputs() {
-        try {
-            return {
-                weight_clean: parseFloat(document.getElementById('weight_clean').value),
-                weight_soot_loaded: parseFloat(document.getElementById('weight_soot_loaded').value),
-                weight_after_regen: parseFloat(document.getElementById('weight_after_regen').value),
-                cmm: parseFloat(document.getElementById('cmm').value),
-                temp_c: parseFloat(document.getElementById('temp_c').value),
-                amb_kpa: parseFloat(document.getElementById('amb_kpa').value),
-                width_mm: parseFloat(document.getElementById('width_mm').value),
-                height_mm: parseFloat(document.getElementById('height_mm').value),
-                depth_mm: parseFloat(document.getElementById('depth_mm').value),
-                cpsi: parseFloat(document.getElementById('cpsi').value),
-                wall_mil: parseFloat(document.getElementById('wall_mil').value),
-                porosity_pct: parseFloat(document.getElementById('porosity_pct').value),
-                pore_size_um: parseFloat(document.getElementById('pore_size_um').value),
-                k2: document.getElementById('k2').value,
-                pipe_dia_mm: parseFloat(document.getElementById('pipe_dia_mm').value),
-                cone_angle_deg: parseFloat(document.getElementById('cone_angle_deg').value)
-            };
-        } catch (e) {
-            alert("입력값을 확인해주세요.");
+        const ids = [
+            'weight_clean', 'weight_soot_loaded', 'weight_after_regen',
+            'cmm', 'temp_c', 'amb_kpa', 'width_mm', 'height_mm', 'depth_mm',
+            'cpsi', 'wall_mil', 'porosity_pct', 'pore_size_um', 'pipe_dia_mm', 'cone_angle_deg'
+        ];
+        
+        const data = {};
+        for (const id of ids) {
+            const el = document.getElementById(id);
+            if (!el) {
+                console.error(`Missing element: ${id}`);
+                alert(`오류: '${id}' 입력 필드를 찾을 수 없습니다.`);
+                return null;
+            }
+            const val = parseFloat(el.value);
+            if (isNaN(val)) {
+                alert(`입력값을 확인해주세요: [${id}] 항목에 유효한 숫자가 없습니다.`);
+                return null;
+            }
+            data[id] = val;
+        }
+        
+        // k2는 문자열로 가져와서 나중에 변환 (과학적 표기법 대응)
+        const k2El = document.getElementById('k2');
+        if (!k2El || isNaN(parseFloat(k2El.value))) {
+            alert("입력값을 확인해주세요: [Soot 투과율(k2)] 항목이 비어있거나 숫자가 아닙니다.");
             return null;
         }
+        data['k2'] = k2El.value;
+        
+        return data;
     }
 
     analyzeBtn.addEventListener('click', () => {
