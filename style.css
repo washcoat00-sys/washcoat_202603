@@ -176,6 +176,32 @@ header h1 {
     border-radius: 6px;
 }
 
+.guide-box-results {
+    margin-top: auto;
+    padding: 12px;
+    background: var(--bg-color);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: var(--text-color);
+    border-top: 1px solid var(--border);
+}
+
+.guide-box-results strong {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--primary);
+}
+
+.guide-box-results p {
+    margin: 2px 0;
+}
+
+.sub-guide {
+    padding-left: 10px;
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
 /* 결과 컬럼 */
 .results-container h3 {
     font-size: 1.1rem;
